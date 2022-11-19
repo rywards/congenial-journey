@@ -5,6 +5,7 @@ import discord
 import random
 import json
 import string
+import requests
 
 from dotenv import load_dotenv
 # Developer Server GUILD ID 475422952121171970
@@ -18,6 +19,16 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 url_size = 11
+
+def check_video_url(video_id):
+    checker_url = "https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v="
+    video_url = checker_url + video_id
+
+    request = requests.get(video_url)
+
+    return request.status_code == 200
+
+
 @client.event
 async def on_ready():
     for guild in client.guilds:
@@ -71,12 +82,21 @@ async def on_message(message):
 
     if message.content == '/video':
         url = 'https://www.youtube.com/watch?v='
-        code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(11))
-
         video = url+code
+
         await message.channel.send(video)
         await message.delete()
         print(video)
 
+@client.event
+async def on_message_edit(before, after):
+
+    f = open('insults.json')
+    insults = json.load(f)
+    response = random.choice(insults)
+    insult = response['insult']
+
+    await after.reply(f'{insult}', mention_author=True)
+    print("Successful response to edit.")
 
 client.run(TOKEN)
