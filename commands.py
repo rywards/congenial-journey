@@ -43,6 +43,14 @@ def searchword():
 
     return response
 
+def getinsult():
+    f = open('insults.json')
+    insults = json.load(f)
+    response = random.choice(insults)
+    insult = response['insult']
+
+    return insul
+
 # Checking that the bot has started and providing information
 # about the session
 @bot.event
@@ -79,11 +87,13 @@ async def hello(ctx: interactions.CommandContext):
     await ctx.send("Hi there!")
 
 # callback that sends a response upon button click
+# button gets edited but stays; need to fix that
 @bot.component("confirm")
 async def _click_me(ctx: interactions.ComponentContext):
     button.disabled=True
-
-    await ctx.send('That fuckin click got me so wet.', components=button)
+    insult=getinsult()
+    await ctx.edit(components=button)
+    await ctx.send(insult)
 
 
 # test command with button functionalist
@@ -112,6 +122,7 @@ async def quote(ctx: interactions.CommandContext):
     curr_time = curr_time.strftime("%m/%d/%Y %H:%M:%S")
     print(curr_time + ": " + "Quote successfully sent.")
 
+# command to send a random word
 @bot.command(
     name="word",
     description="Random word please!",
