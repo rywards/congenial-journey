@@ -76,9 +76,8 @@ async def on_message_edit(before, after):
     curr_time = curr_time.strftime("%m/%d/%Y %H:%M:%S")
     print(curr_time + ": " + "Successful response to edit.")
 
-bot = interactions.Client(token=TOKEN)
 
-@bot.event
+@client.event
 async def on_message(message):
 
     #if debugging needed, use the trusty print statements
@@ -92,7 +91,7 @@ async def on_message(message):
 
     await bot.precess_commands(message)
 
-@bot.command(
+@client.command(
     name="quote",
     description="Get me a quote fucker.",
     scope=789213817912557588,
@@ -109,5 +108,4 @@ async def quote(ctx: interactions.CommandContext):
     curr_time = curr_time.strftime("%m/%d/%Y %H:%M:%S")
     print(curr_time + ": " + "Quote successfully sent.")
 
-bot.start()
 client.run(TOKEN)
